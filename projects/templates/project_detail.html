@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid bg-dark-subtle" style="height: 90vh;">
+    <div class="p-1 m-0 ">
+        <div class=" row d-flex  justify-content-between">
+            <div class=" col-5 m-2">
+                <img src="{{object.get_image_url}}" alt="{{object.get_image_url}}" class="m-0 w-100 rounded">
+                <div class="col-lg-6 mt-5 text-center">
+                    {% if not object.comments.all %}
+                     <p>not comments added yet........</p>
+                     <p> <a class="btn btn-primary" href="{% url 'add_comment' object.id %}"> Add Comment </a></p>
+                     {% else %}
+    
+                     {% for comment in object.comments.all%}
+                     <div class="card">
+                     <h3><strong>{{comment.commenter_name}}</strong></h3>
+                     <p>{{comment.comment_body}}</p>
+                        
+                     {% if request.user.username == comment.commenter_name %}
+                     <p> <a class="btn btn-danger" href="{% url 'delete_comment' object.id %}"> Delete Comment </a></p>
+                     </div>
+                     {% else%}
+                     <p> <a class="btn btn-danger" href="{% url 'report_comment' object.id %}">Report </a></p>
+                     {% endif %}
+
+                     {% endfor %}
+                     <p> <a class="btn btn-primary" href="{% url 'add_comment' object.id %}"> Add Comment </a></p>
+
+                     
+                    {% endif %}
+
+                
+         
+
+     
+                 </div>
+            </div>
+            <div class="col-5 m-2 mt-4">
+                <h3 class="card-title rounded-3">{{object.title}}</h3>
+                <p class="card-text fs-6"> {{object.details}} </p>
+                <p>Category: {{ object.category }}</p>
+                <p>Total target: {{ object.total_target }}</p>
+                <p>Start time: {{ object.start_time }}</p>
+                <p>End time: {{ object.end_time }}</p>
+                <p class="card-text"> {{object.tags}} </p>
+                <div class="row d-flex justify-content-center m-3">
+                </div>
+                <div class="card p-3">
+                    <h3>Donate to this project</h3>
+                    <form method="POST" >
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="amount">Amount (EGP)</label>
+                            <input type="number" class="form-control" id="amount" name="amount" required>
+                        </div>
+                        <a href="{% url 'detail' project.id %}" class="btn btn-outline-danger mt-3 mb-4"> Donate Now
+                        </a>
+
+                    </form>
+
+                    
+                </div>
+                <a href="{% url 'allprojects' %}" class="btn btn-outline-dark mt-3 mb-4">back</a>
+                <a href="{% url 'deleteproject' object.id %}" class="btn btn-outline-danger mt-3 mb-4"> Delete </a>
+                <a href="{% url 'updateproject' object.id %}" class="btn btn-outline-dark mt-3 mb-4"> Update </a>
+
+    
+
+
+
+            </div>
+            
+
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
